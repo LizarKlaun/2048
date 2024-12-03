@@ -5,31 +5,16 @@ using namespace std;
 
 void gameOutput(int** field) { // здесь создаём мы функцию которая выводит всю игру
 	int a = 0; // нужно чтобы проверяло есть ли в массиве 2 мерные или ещё больше числа чтобы перестраиватся можно было типо то больше интерфейс то меньше
-	int x = 0;
-	int y = 0;
 	for (int i = 0; i < 4; i++) { // перебераем все числа во всех масивах
 		for (int j = 0; j < 4; j++) {
-			if (field[i][j] >= 10 && field[x][y] <100) { // cмотрим является ли оно двухзначное
-				a = 1;
-			}
-			if (field[i][j] >= 100) { // теперь является ли оно трёхзначное
-				a = 2;
-				x = i;
-				y = j;
+			if (field[i][j] > a) { // cмотрим является ли оно двухзначное
+				a = field[i][j];
 			}
 		}
 	}
 	for (int i = 0; i < 4; i++) { // снова перебераем всё
 		for (int j = 0; j < 4; j++) {
-			if (a == 1) { // если число двухзначное то интерфейсе будет в 2 раза больше пробелов но не в месте где число двухзначное
-				if (field[i][j] >= 10) {
-					cout << field[i][j] << " ";
-				}
-				else {
-					cout << field[i][j] << "  ";
-				}
-			} // иначе нет
-			else if (a == 2) { // если трёхзначное то пробел цифре будет в 3 раза больше а в двухзначном будет в 2 раза больше пробел
+			if (a >= 100) { // если число двухзначное то интерфейсе будет в 2 раза больше пробелов но не в месте где число двухзначное
 				if (field[i][j] >= 100) {
 					cout << field[i][j] << " ";
 				}
@@ -39,12 +24,20 @@ void gameOutput(int** field) { // здесь создаём мы функцию 
 				else {
 					cout << " " << field[i][j] << "  ";
 				}
+			} // иначе нет
+			else if (a >= 10) { // если трёхзначное то пробел цифре будет в 3 раза больше а в двухзначном будет в 2 раза больше пробел
+				if (field[i][j] >= 10) {
+					cout << field[i][j] << " ";
+				}
+				else {
+					cout << field[i][j] << "  ";
+				}
 			}
 			else {
 				cout << field[i][j] << " ";
 			}
 		}
-		if (a == 2) {
+		if (a >= 100) {
 			cout << endl;
 		}
 		cout << endl;
@@ -127,7 +120,7 @@ void playerMoveOutput(int** field, char* move) { // cоздаём функцию
 	}
 
 	else if (move[0] == 'a' || move[0] == 'A') { // здесь уже влево. Что и как работает написал сверху /|\ 
-		for (int i = 0; i < 4; i++) { //                                                          |
+		for (int i = 0; i < 4; i++) { //                                                                |
 			int a = 0;
 			int b = 0;
 			int c = 0;
@@ -262,54 +255,69 @@ void playerMoveOutput(int** field, char* move) { // cоздаём функцию
 	}
 }
 
-void dataCheck(int** field, char* move, int* countingMoves, int** lastField, int* kdBack) {
-	int** lastField1 = new int* [4];
-	for (int i = 0; i < 4; i++) {
-		lastField1[i] = new int[4];
-	}
+void dataCheck(int** field, char* move, int* countingMoves, int*** lastField) {
+	int k = *countingMoves;
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			lastField1[i][j] = lastField[i][j];
+			lastField[k][i][j] = field[i][j];
 		}
 	}
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			lastField[i][j] = field[i][j];
-		}
-	}
-	cout << "Make your " << *countingMoves << "st move: ";
+	cout << "Make your " << *countingMoves + 1 << "st move: ";
 	cin >> move; // даём возмонжость выбрать куда походить
 	playerMoveOutput(field, move);
 	int similarityField = 0;
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			if (lastField[i][j] != field[i][j]) {
+			if (lastField[k][i][j] != field[i][j]) {
 				similarityField = 1;
 			}
 		}
 	}
-	if (similarityField == 1 || move[0] == 'b') {
-		if (move[0] == 'w' || move[0] == 'W' || move[0] == 'a' || move[0] == 'A' || move[0] == 's' || move[0] == 'S' || move[0] == 'd' || move[0] == 'D') { // проверка на оленя
-			if (*kdBack < 1) {
-				++*kdBack;
-			}
-			++*countingMoves; // прибавляем к числу ходов 1
-			selectionRandomOutput(field); // вызываем рандом
-			gameOutput(field); // и показываем пользователю что он сделал
-		}
-		else if (move[0] == 'b' && *kdBack == 1) {
+	if (similarityField == 1) {
+		++*countingMoves; // прибавляем к числу ходов 1
+		selectionRandomOutput(field); // вызываем рандом
+		gameOutput(field); // и показываем пользователю что он сделал
+	}
+	else if (*countingMoves > 0) {
+		if (move[0] == 'b' || move[0] == 'b' && move[1] == 'a' && move[2] == 'c' && move[3] == 'k' ) {
 			for (int i = 0; i < 4; i++) {
 				for (int j = 0; j < 4; j++) {
-					field[i][j] = lastField1[i][j];
+					field[i][j] = lastField[k - 1][i][j];
 				}
 			}
-			*kdBack = 0;
 			-- * countingMoves; // прибавляем к числу ходов 1
 			gameOutput(field); // и показываем пользователю что он сделал
 		}
-		else { // если проверка на оленя не удачна то запускаем всё заново
-			return;
+	}
+	else {
+		return;
+	}
+}
+
+void gameEnd(int** field, int endGame) {
+	int similarityСells = 0;
+	for (int i = 0; i < 4; i++) { // проверка на конец игры
+		for (int j = 0; j < 4; j++) {
+			if (field[i][j] == 2048) {
+				endGame = 1;
+			}
+			else if (i != 3) {
+				if (field[i][j] == field[i + 1][j] || field[i][j] == 0) {
+					similarityСells += 1;
+				}
+			}
+			else if (j != 3) {
+				if (field[i][j] == field[i][j + 1] || field[i][j] == 0) {
+					similarityСells += 1;
+				}
+			}
+			else if (field[0][0] == field[0][1] || field[0][0] == field[1][0] || field[0][0] == 0) {
+				similarityСells += 1;
+			}
 		}
+	}
+	if (similarityСells == 0) {
+		endGame = 2;
 	}
 }
 
@@ -326,13 +334,17 @@ int main()
 			field[i][j] = 0;
 		}
 	}
-	int** lastField = new int* [4];
-	for (int i = 0; i < 4; i++) {
-		lastField[i] = new int[4];
+
+	int*** lastField = new int** [100];
+	for (int k = 0; k < 100; k++) {
+		lastField[k] = new int*[4];
+		for (int i = 0; i < 4; i++) {
+			lastField[k][i] = new int[4];
+		}
 	}
 
 	//field[0][0] = 128;
-	//field[1][0] = 2;
+	//field[3][3] = 2;
 	//field[2][0] = 2;
 	//field[3][0] = 0;
 
@@ -356,31 +368,10 @@ int main()
 	gameOutput(field);
 	int endGame = 0;
 	char move[10]; // создаём переменную отвечающию за выбраный ход игрока
-	int* сountingMoves = new int(1); // число его ходов
-	int* kdBack = new int(0);
+	int* сountingMoves = new int(0); // число его ходов
 	do { // бесконечность не предел
-		dataCheck(field, move, сountingMoves, lastField, kdBack);
-		int similarityСells = 0;
-		for (int i = 0; i < 4; i++) { // заполняем массив чисел 
-			for (int j = 0; j < 4; j++) {
-				if (field[i][j] == 2048) {
-					endGame = 1;
-				}
-				else if (i != 3) {
-					if (field[i][j] == field[i + 1][j] || field[i][j] == 0) {
-						similarityСells += 1;
-					}
-				}
-				else if (j != 3) {
-					if (field[i][j] == field[i][j + 1] || field[i][j] == 0) {
-						similarityСells += 1;
-					}
-				}
-			}
-		}
-		if (similarityСells == 0) {
-			endGame = 2;
-		}
+		dataCheck(field, move, сountingMoves, lastField);
+		gameEnd(field, endGame);
 	} while (endGame == 0);
 	if (endGame == 1) {
 		cout << "You WIN!!!" << endl;
