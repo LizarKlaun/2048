@@ -267,11 +267,20 @@ void playerMoveOutput(int** field, char* move) { // cоздаём функцию
 }
 
 void dataCheck(int** field, char* move, int* countingMoves, int*** lastField) {
-	cout << "LOL1" << endl;
+
+	lastField[*countingMoves - 1] = new int* [4];
+	for (int i = 0; i < 4; i++) {
+		lastField[*countingMoves - 1][i] = new int[4];
+		for (int j = 0; j < 4; j++) {
+			lastField[*countingMoves - 1][i][j] = field[i][j];
+		}
+	}
+
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			lastField[*countingMoves][i][j] = field[i][j];
+			cout << lastField[0][i][j] << " ";
 		}
+		cout << endl;
 	}
 
 	int*** tempLastField = new int** [*countingMoves];
@@ -285,7 +294,6 @@ void dataCheck(int** field, char* move, int* countingMoves, int*** lastField) {
 		}
 	}
 
-	cout << "LOL2" << endl;
 	for (int k = 0; k < *countingMoves; ++k) {
 		for (int i = 0; i < 4; ++i) {
 			delete[] lastField[k][i];
@@ -305,11 +313,13 @@ void dataCheck(int** field, char* move, int* countingMoves, int*** lastField) {
 		}
 	}
 
-	lastField[*countingMoves + 1] = new int* [4];
-	for (int i = 0; i < 4; ++i) {
-		lastField[*countingMoves + 1][i] = new int[4];
+	cout << "LOL2" << endl;
+
+	lastField[*countingMoves - 1] = new int* [4];
+	for (int i = 0; i < 4; i++) {
+		lastField[*countingMoves - 1][i] = new int[4];
 		for (int j = 0; j < 4; j++) {
-			lastField[*countingMoves + 1][i][j] = field[i][j];
+			lastField[*countingMoves - 1][i][j] = field[i][j];
 		}
 	}
 
@@ -326,7 +336,7 @@ void dataCheck(int** field, char* move, int* countingMoves, int*** lastField) {
 	int similarityField = 0;
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			if (lastField[*countingMoves+1][i][j] != field[i][j]) {
+			if (lastField[*countingMoves-1][i][j] != field[i][j]) {
 				similarityField = 1;
 			}
 		}
@@ -335,6 +345,7 @@ void dataCheck(int** field, char* move, int* countingMoves, int*** lastField) {
 		++*countingMoves; // прибавляем к числу ходов 1
 		selectionRandomOutput(field); // вызываем рандом
 		gameOutput(field); // и показываем пользователю что он сделал
+		cout << lastField[0][0][0] << endl;
 	}
 	else if (*countingMoves > 0) {
 		if (move[0] == 'b' || move[0] == 'b' && move[1] == 'a' && move[2] == 'c' && move[3] == 'k') {
@@ -401,6 +412,21 @@ int main()
 		}
 	}
 
+	for (int k = 0; k < 1; k++) {
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				lastField[k][i][j] = 0;
+			}
+		}
+	}
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			cout << lastField[0][i][j] << " ";
+		}
+		cout << endl;
+	}
+
 	//field[0][0] = 128;
 	//field[1][0] = 64;
 	//field[2][0] = 32;
@@ -420,7 +446,6 @@ int main()
 	//field[1][3] = 8;
 	//field[2][3] = 2;
 	//field[3][3] = 0;
-
 	selectionRandomOutput(field); // по игре сразу 2 создают числа а не 1
 	selectionRandomOutput(field); // а вот и 2
 	gameOutput(field);
@@ -428,7 +453,14 @@ int main()
 	char move[10]; // создаём переменную отвечающию за выбраный ход игрока
 	int* сountingMoves = new int(1); // число его ходов
 	do { // бесконечность не предел
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				cout << lastField[0][i][j] << " ";
+			}
+			cout << endl;
+		}
 		dataCheck(field, move, сountingMoves, lastField);
+		cout << lastField[0][0][0] << endl;
 		gameEnd(field, endGame);
 	} while (*endGame == 0);
 	if (*endGame == 1) {
