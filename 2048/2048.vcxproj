@@ -129,6 +129,11 @@
   <ItemGroup>
     <ClCompile Include="2048.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ChoosingRandomNumber.h" />
+    <ClInclude Include="Move.h" />
+    <ClInclude Include="Output.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
