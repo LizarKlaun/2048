@@ -1,5 +1,5 @@
-void playerMoveOutput(int** field, char* move) { // cоздаём функцию для возможности ходить
-	if (move[0] == 'w' || move[0] == 'W') { // конкретно здесь он ходит на верх
+void playerMoveOutput(int** field, char move) { // cоздаём функцию для возможности ходить
+	if (move == 'w' || move == 'W' || move == 72) { // конкретно здесь он ходит на верх
 		for (int j = 0; j < 4; j++) { //цикл который переберает массив масивов
 			int a = 0; //нужны для проверки сколько раз уже применялась сумма
 			int b = 0; //тоже самое
@@ -46,7 +46,7 @@ void playerMoveOutput(int** field, char* move) { // cоздаём функцию
 		}
 	}
 
-	else if (move[0] == 'a' || move[0] == 'A') { // здесь уже влево. Что и как работает написал сверху /|\ 
+	else if (move == 'a' || move == 'A' || move == 75) { // здесь уже влево. Что и как работает написал сверху /|\ 
 		for (int i = 0; i < 4; i++) { //                                                                |
 			int a = 0;
 			int b = 0;
@@ -91,7 +91,7 @@ void playerMoveOutput(int** field, char* move) { // cоздаём функцию
 		}
 	}
 
-	else if (move[0] == 's' || move[0] == 'S') { // теперь вниз... что и как сверху и ещё выше
+	else if (move == 's' || move == 'S' || move == 80) { // теперь вниз... что и как сверху и ещё выше
 		for (int j = 3; j > -1; j--) {
 			int a = 0;
 			int b = 0;
@@ -136,7 +136,7 @@ void playerMoveOutput(int** field, char* move) { // cоздаём функцию
 		}
 	}
 
-	else if (move[0] == 'd' || move[0] == 'D') { // сейчас направо...... что да как это надо листать выше и ещё выше почти до потолка
+	else if (move == 'd' || move == 'D' || move == 77) { // сейчас направо...... что да как это надо листать выше и ещё выше почти до потолка
 		for (int i = 3; i > -1; i--) {
 			int a = 0;
 			int b = 0;

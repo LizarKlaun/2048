@@ -131,6 +131,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChoosingRandomNumber.h" />
+    <ClInclude Include="GameEndClassic.h" />
+    <ClInclude Include="GameEndLvl.h" />
+    <ClInclude Include="MenuExit.h" />
+    <ClInclude Include="MenuMode.h" />
+    <ClInclude Include="MenuModeAdventure.h" />
+    <ClInclude Include="MenuStart.h" />
     <ClInclude Include="Move.h" />
     <ClInclude Include="Output.h" />
   </ItemGroup>
