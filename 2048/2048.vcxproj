@@ -130,9 +130,12 @@
     <ClCompile Include="2048.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CheckDataAdventure.h" />
+    <ClInclude Include="CheckDataClassic.h" />
     <ClInclude Include="ChoosingRandomNumber.h" />
     <ClInclude Include="GameEndClassic.h" />
-    <ClInclude Include="GameEndLvl.h" />
+    <ClInclude Include="GameEndAdventure.h" />
+    <ClInclude Include="GameEndEndless.h" />
     <ClInclude Include="MenuExit.h" />
     <ClInclude Include="MenuMode.h" />
     <ClInclude Include="MenuModeAdventure.h" />

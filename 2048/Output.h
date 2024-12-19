@@ -1,40 +1,32 @@
 void gameOutput(int** field) { // здесь создаём мы функцию которая выводит всю игру
-	int a = 0; // нужно чтобы проверяло есть ли в массиве 2 мерные или ещё больше числа чтобы перестраиватся можно было типо то больше интерфейс то меньше
+	int a = 0; // нужно чтобы узнать максимальное число в массиве
+	int numberOfDigits = 0;
 	for (int i = 0; i < 4; i++) { // перебераем все числа во всех масивах
 		for (int j = 0; j < 4; j++) {
-			if (field[i][j] > a) { // cмотрим является ли оно двухзначное
+			if (field[i][j] > a) { // cмотрим является ли оно меньше прошлой проверки
 				a = field[i][j];
 			}
 		}
 	}
+	do {
+		numberOfDigits++;
+		a /= 10; // Уменьшаем число, деля на 10
+	} while (a > 0);
 	for (int i = 0; i < 4; i++) { // снова перебераем всё
 		for (int j = 0; j < 4; j++) {
-			if (a >= 100) { // если число двухзначное то интерфейсе будет в 2 раза больше пробелов но не в месте где число двухзначное
-				if (field[i][j] >= 100) {
-					cout << field[i][j] << " ";
-				}
-				else if (field[i][j] >= 10) {
-					cout << field[i][j] << "  ";
-				}
-				else {
-					cout << " " << field[i][j] << "  ";
-				}
-			} // иначе нет
-			else if (a >= 10) { // если трёхзначное то пробел цифре будет в 3 раза больше а в двухзначном будет в 2 раза больше пробел
-				if (field[i][j] >= 10) {
-					cout << field[i][j] << " ";
-				}
-				else {
-					cout << field[i][j] << "  ";
-				}
-			}
-			else {
-				cout << field[i][j] << " ";
+			cout << field[i][j];
+			a = field[i][j];
+			int numberOfDigitsElement = 0;
+			do {
+				numberOfDigitsElement++;
+				a /= 10; // Уменьшаем число, деля на 10
+			} while (a > 0);
+			for (int k = 0; k < (numberOfDigits-(numberOfDigitsElement-1)); k++) {
+				cout << " ";
 			}
 		}
-		if (a >= 100) {
+		for (int j = 0; j < ((numberOfDigits+1)/2); j++) {
 			cout << endl;
 		}
-		cout << endl;
 	}
 }

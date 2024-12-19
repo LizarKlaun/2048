@@ -41,10 +41,19 @@
     <ClInclude Include="GameEndClassic.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="GameEndLvl.h">
+    <ClInclude Include="GameEndAdventure.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="MenuExit.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="CheckDataClassic.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="CheckDataAdventure.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEndEndless.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>

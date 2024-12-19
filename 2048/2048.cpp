@@ -5,15 +5,18 @@
 
 using namespace std;
 
-#include "Move.h"
-#include "Output.h"
-#include "ChoosingRandomNumber.h"
-#include "MenuModeAdventure.h"
-#include "MenuMode.h"
-#include "MenuExit.h"
-#include "MenuStart.h"
-#include "GameEndLvl.h"
-#include "GameEndClassic.h"
+#include "Move.h" // просчитывает ходы игрока
+#include "Output.h" // выводит поле 2024
+#include "ChoosingRandomNumber.h" // выбирает рандомной число для вставки в рандомное место на поле 2024
+#include "MenuModeAdventure.h" // менюшка адвенчура
+#include "MenuMode.h" // менюшка режимов
+#include "MenuExit.h" // менюшка выйти
+#include "MenuStart.h" // главная менюшка
+#include "GameEndAdventure.h" // проверка на окончание игры для адвенчура
+#include "GameEndEndless.h" // проверка на окончание игры для бесконечного
+#include "GameEndClassic.h" // проверка на окончание игры для классика
+#include "CheckDataAdventure.h" // проверка на ход игрока для адвенчура
+#include "CheckDataClassic.h" // проверка на ход игрока для классика
 
 int*** addOneMoveLastField(int*** lastField, int* countingMoves, int** field) {
 	int*** tempLastField = new int** [*countingMoves + 1];
@@ -46,50 +49,6 @@ int*** addOneMoveLastField(int*** lastField, int* countingMoves, int** field) {
 	return tempLastField;
 }
 
-void dataCheck(int** field, char move, int* countingMoves, int*** lastField, int* countingReturnedMoves, int* endGame) {
-	while (true) {
-		cout << "Make your " << *countingMoves << "st move: " << endl;
-		move = _getch(); // даём возмонжость выбрать куда походить
-		if (move == 0 || move == -32) {
-			move = _getch();
-		}
-		playerMoveOutput(field, move);
-		int similarityField = 0;
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
-				if (lastField[*countingMoves - 1][i][j] != field[i][j]) {
-					similarityField = 1;
-				}
-			}
-		}
-		if (similarityField == 1) {
-			system("cls");
-			++*countingMoves; // прибавляем к числу ходов 1
-			selectionRandomOutput(field); // вызываем рандом
-			gameOutput(field); // и показываем пользователю что он сделал
-			break;
-		}
-		else if (*countingMoves > 1 && move == 'b') {
-			--*countingMoves;
-			++*countingReturnedMoves;
-			for (int i = 0; i < 4; i++) {
-				for (int j = 0; j < 4; j++) {
-					field[i][j] = lastField[*countingMoves - 1][i][j];
-				}
-			}
-			gameOutput(field); // и показываем пользователю что он сделал
-			break;
-		}
-		else if (move == 27) {
-			*endGame = 2;
-			break;
-		}
-		else {
-			cout << "Error. Press A W S D" << endl;
-		}
-	}
-}
-
 int main()
 {
 	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE); // Получаем хэндл консоли
@@ -114,43 +73,40 @@ int main()
 
 	char** menuStart = new char* [6];
 	int* locationXmenuStart = new int(0);
-	menuStart[*locationXmenuStart] = new char[3] {'-', '>', '\0'};
-	menuStart[1] = new char[11] {'1', '.', ' ', 'S', 't', 'a', 'r', 't', ' ', '|', '\0'};
-	menuStart[2] = new char[10] {'2', '.', ' ', 'I', 'n', 'f', 'o', ' ', '|', '\0'};
-	menuStart[3] = new char[15] {'3', '.', ' ', 'G', 'a', 'm', 'e', ' ', 'm', 'o', 'd', 'e', ' ', '|', '\0'};
-	menuStart[4] = new char[16] {'4', '.', ' ', 'D', 'i', 'f', 'f', 'i', 'c', 'u', 'l', 't', 'i', ' ', '|', '\0'};
-	menuStart[5] = new char[9] {'5', '.', ' ', 'E', 'x', 'i', 't', '\0'};
+	menuStart[0] = new char[11] {'1', '.', ' ', 'S', 't', 'a', 'r', 't', ' ', '|', '\0'};
+	menuStart[1] = new char[10] {'2', '.', ' ', 'I', 'n', 'f', 'o', ' ', '|', '\0'};
+	menuStart[2] = new char[15] {'3', '.', ' ', 'G', 'a', 'm', 'e', ' ', 'm', 'o', 'd', 'e', ' ', '|', '\0'};
+	menuStart[3] = new char[16] {'4', '.', ' ', 'D', 'i', 'f', 'f', 'i', 'c', 'u', 'l', 't', 'y', ' ', '|', '\0'};
+	menuStart[4] = new char[14] {'5', '.', ' ', 'T', 'u', 't', 'o', 'r', 'i', 'a', 'l', ' ', '|', '\0'};
+	menuStart[5] = new char[9] {'6', '.', ' ', 'E', 'x', 'i', 't', '\0'};
 
-	char** menuExit = new char* [3];
+	char** menuExit = new char* [2];
 	int* locationXmenuExit = new int(1);
 	menuExit[0] = new char[9] {'1', '.', ' ', 'Y', 'e', 's', ' ', '|', '\0'};
-	menuExit[*locationXmenuExit] = new char[3] {'-', '>', '\0'};
-	menuExit[2] = new char[6] {'2', '.', ' ', 'N', 'o', '\0'};
+	menuExit[1] = new char[6] {'2', '.', ' ', 'N', 'o', '\0'};
 
 	int* mode = new int(0);
 
-	char** menuMode = new char* [6];
+	char** menuMode = new char* [5];
 	int* locationXmenuMode = new int(0);
-	menuMode[*locationXmenuMode] = new char[3] {'-', '>', '\0'};
-	menuMode[1] = new char[13] {'1', '.', ' ', 'C', 'l', 'a', 's', 's', 'i', 'c', ' ', '|', '\0'};
-	menuMode[2] = new char[15] {'2', '.', ' ', 'A', 'd', 'v', 'e', 'n', 't', 'u', 'r', 'e', ' ', '|', '\0'};
-	menuMode[3] = new char[13] {'3', '.', ' ', 'E', 'n', 'd', 'l', 'e', 's', 's', ' ', '|', '\0'};
-	menuMode[4] = new char[13] {'4', '.', ' ', 'D', 'r', 'i', 'v', 'i', 'n', 'g', ' ', '|', '\0'};
-	menuMode[5] = new char[8] {'5', '.', ' ', 'B', 'a', 'c', 'k', '\0'};
+	menuMode[0] = new char[13] {'1', '.', ' ', 'C', 'l', 'a', 's', 's', 'i', 'c', ' ', '|', '\0'};
+	menuMode[1] = new char[15] {'2', '.', ' ', 'A', 'd', 'v', 'e', 'n', 't', 'u', 'r', 'e', ' ', '|', '\0'};
+	menuMode[2] = new char[13] {'3', '.', ' ', 'E', 'n', 'd', 'l', 'e', 's', 's', ' ', '|', '\0'};
+	menuMode[3] = new char[13] {'4', '.', ' ', 'D', 'r', 'i', 'v', 'i', 'n', 'g', ' ', '|', '\0'};
+	menuMode[4] = new char[8] {'5', '.', ' ', 'B', 'a', 'c', 'k', '\0'};
 
-	int* adventureModeLvl = new int(1);
+	int* adventureModeLvl = new int(0);
 	int* adventureModeMaxLvl = new int(1);
 
-	char** menuModeAdventure = new char* [8];
+	char** menuModeAdventure = new char* [7];
 	int* locationXmenuModeAdventure = new int(0);
-	menuModeAdventure[*locationXmenuModeAdventure] = new char[3] {'-', '>', '\0'};
-	menuModeAdventure[1] = new char[13] {'1', '.', ' ', 'F', 'i', 'r', 's', 't', ' ', 'l', 'v', 'l', '\0'};
-	menuModeAdventure[2] = new char[14] {'2', '.', ' ', 'S', 'e', 'c', 'o', 'n', 'd', ' ', 'l', 'v', 'l', '\0'};
-	menuModeAdventure[3] = new char[13] {'3', '.', ' ', 'T', 'h', 'i', 'r', 'd', ' ', 'l', 'v', 'l', '\0'};
-	menuModeAdventure[4] = new char[14] {'4', '.', ' ', 'F', 'o', 'u', 'r', 't', 'h', ' ', 'l', 'v', 'l', '\0'};
-	menuModeAdventure[5] = new char[13] {'5', '.', ' ', 'F', 'i', 'f', 't', 'h', ' ', 'l', 'v', 'l', '\0'};
-	menuModeAdventure[6] = new char[13] {'6', '.', ' ', 'S', 'i', 'x', 't', 'h', ' ', 'l', 'v', 'l', '\0'};
-	menuModeAdventure[7] = new char[8] {'7', '.', ' ', 'B', 'a', 'c', 'k', '\0'};
+	menuModeAdventure[0] = new char[13] {'1', '.', ' ', 'F', 'i', 'r', 's', 't', ' ', 'l', 'v', 'l', '\0'};
+	menuModeAdventure[1] = new char[14] {'2', '.', ' ', 'S', 'e', 'c', 'o', 'n', 'd', ' ', 'l', 'v', 'l', '\0'};
+	menuModeAdventure[2] = new char[13] {'3', '.', ' ', 'T', 'h', 'i', 'r', 'd', ' ', 'l', 'v', 'l', '\0'};
+	menuModeAdventure[3] = new char[14] {'4', '.', ' ', 'F', 'o', 'u', 'r', 't', 'h', ' ', 'l', 'v', 'l', '\0'};
+	menuModeAdventure[4] = new char[13] {'5', '.', ' ', 'F', 'i', 'f', 't', 'h', ' ', 'l', 'v', 'l', '\0'};
+	menuModeAdventure[5] = new char[13] {'6', '.', ' ', 'S', 'i', 'x', 't', 'h', ' ', 'l', 'v', 'l', '\0'};
+	menuModeAdventure[6] = new char[8] {'7', '.', ' ', 'B', 'a', 'c', 'k', '\0'};
 
 	while (true) {
 		*сountingMoves = 1;
@@ -184,7 +140,72 @@ int main()
 			}
 		}
 
-		startMenu(menuStart, locationXmenuStart, topCountingMoves, topCountingReturnedMoves, topPointCounter, topMaxCounter, menuMode, mode, locationXmenuMode, menuModeAdventure, locationXmenuModeAdventure, adventureModeLvl, adventureModeMaxLvl, menuExit, locationXmenuExit);
+		int* exit = new int(0);
+		startMenu(menuStart, locationXmenuStart, topCountingMoves, topCountingReturnedMoves, topPointCounter, topMaxCounter, menuMode, mode, locationXmenuMode, menuModeAdventure, locationXmenuModeAdventure, adventureModeLvl, adventureModeMaxLvl, menuExit, locationXmenuExit, exit);
+		if (*exit == 1) {
+			for (int i = 0; i < 4; i++) {
+				delete[] field[i];
+			}
+			delete[] field;
+			field = nullptr;
+
+			for (int k = 0; k < *сountingMoves; ++k) {
+				for (int i = 0; i < 4; ++i) {
+					delete[] lastField[k][i];
+				}
+				delete[] lastField[k];
+			}
+			delete[] lastField;
+			lastField = nullptr;
+
+			delete locationXmenuModeAdventure;
+			locationXmenuModeAdventure = nullptr;
+
+			delete locationXmenuMode;
+			locationXmenuMode = nullptr;
+
+			delete locationXmenuStart;
+			locationXmenuStart = nullptr;
+
+			delete mode;
+			mode = nullptr;
+
+			delete endGame;
+			endGame = nullptr;
+
+			delete сountingMoves;
+			сountingMoves = nullptr;
+
+			delete countingReturnedMoves;
+			countingReturnedMoves = nullptr;
+
+			delete adventureModeLvl;
+			adventureModeLvl = nullptr;
+
+			delete adventureModeMaxLvl;
+			adventureModeLvl = nullptr;
+
+			for (int i = 0; i < 4; i++) {
+				delete[] menuModeAdventure[i];
+			}
+			delete[] menuModeAdventure;
+			menuModeAdventure = nullptr;
+
+			for (int i = 0; i < 4; i++) {
+				delete[] menuMode[i];
+			}
+			delete[] menuMode;
+			menuMode = nullptr;
+
+			for (int i = 0; i < 4; i++) {
+				delete[] menuStart[i];
+			}
+			delete[] menuStart;
+			menuStart = nullptr;
+
+			return 0;
+		}
+		
 		//modeAdventureMenu();
 
 		//field[0][0] = 1;
@@ -204,91 +225,96 @@ int main()
 		//
 		//field[0][3] = 0;
 		//field[1][3] = 4;
-		//field[2][3] = 5;
-		//field[3][3] = 6;
+		//field[2][3] = 1024;
+		//field[3][3] = 1024;
 
 		selectionRandomOutput(field); // по игре сразу 2 создают числа а не 1
 		selectionRandomOutput(field); // а вот и 2
+		switch (*mode) {
+		case 0:
+			cout << "Classic mode" << endl << endl;
+			break;
+		case 1:
+			cout << "Adventure mode" << endl << menuModeAdventure[*adventureModeLvl - 1] << endl << endl;
+			break;
+		case 2:
+			cout << "Endless mode" << endl << endl;
+			break;
+		}
 		gameOutput(field);
 		do { // бесконечность не предел
 			lastField = addOneMoveLastField(lastField, сountingMoves, field);
-			dataCheck(field, move, сountingMoves, lastField, countingReturnedMoves, endGame);
 			if (*mode == 0) {
+				dataCheckClassic(field, move, сountingMoves, lastField, countingReturnedMoves, endGame);
+				cout << "Classic mode" << endl << endl;
+				gameOutput(field); // и показываем пользователю что он сделал
 				gameEndClassic(field, endGame);
 			}
 			else if (*mode == 1) {
-				if (*adventureModeLvl == 1) {
-					gameEndLvl(field, endGame, adventureModeLvl, adventureModeMaxLvl);
+				dataCheckAdventure(field, move, сountingMoves, lastField, countingReturnedMoves, endGame, adventureModeMaxLvl);
+				cout << "Adventure mode" << endl << menuModeAdventure[*adventureModeLvl - 1] << endl << endl;
+				gameOutput(field); // и показываем пользователю что он сделал
+				if (*endGame == 1) {
+					cout << endl << "You complete this lvl and you unlocked next lvl in Adventure mode!!!" << endl;
 				}
+				gameEndAdvenchure(field, endGame, adventureModeLvl, adventureModeMaxLvl, сountingMoves);
+			}
+			else if (*mode == 2) {
+				dataCheckClassic(field, move, сountingMoves, lastField, countingReturnedMoves, endGame);
+				cout << "Endless mode" << endl << endl;
+				gameOutput(field); // и показываем пользователю что он сделал
+				gameEndEndless(field, endGame);
 			}
 		} while (*endGame == 0);
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				pointCounter += field[i][j];
+			}
+		}
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				if (field[i][j] > maxCounter) {
+					maxCounter = field[i][j];
+				}
+			}
+		}
+		if (topCountingMoves < *сountingMoves) {
+			topCountingMoves = *сountingMoves;
+		}
+		if (topCountingReturnedMoves < *countingReturnedMoves) {
+			topCountingReturnedMoves = *countingReturnedMoves;
+		}
+		if (topPointCounter < pointCounter) {
+			topPointCounter = pointCounter;
+		}
+		if (topMaxCounter < maxCounter) {
+			topMaxCounter = maxCounter;
+		}
 		if (*endGame == 1) {
 			cout << endl << "You WIN!!!" << endl << endl;
-			for (int i = 0; i < 4; i++) {
-				for (int j = 0; j < 4; j++) {
-					pointCounter += field[i][j];
-				}
-			}
-			for (int i = 0; i < 4; i++) {
-				for (int j = 0; j < 4; j++) {
-					if (field[i][j] > maxCounter) {
-						maxCounter = field[i][j];
-					}
-				}
-			}
-			if (topCountingMoves < *сountingMoves) {
-				topCountingMoves = *сountingMoves;
-			}
-			if (topCountingReturnedMoves < *countingReturnedMoves) {
-				topCountingReturnedMoves = *countingReturnedMoves;
-			}
-			if (topPointCounter < pointCounter) {
-				topPointCounter = pointCounter;
-			}
-			if (topMaxCounter < maxCounter) {
-				topMaxCounter = maxCounter;
-			}
 			cout << "Your account: " << pointCounter << '!' << endl
 				<< "Your max number: " << maxCounter << endl
 				<< "Your number of moves: " << *сountingMoves << endl
 				<< "Your number of returned moves: " << *countingReturnedMoves << endl;
 			cout << endl;
-			cout << "Press any key to back..." << endl;
+			cout << "Press any ESC to back..." << endl;
 			move = _getch();
+			while (move != 27 && move != 32) {
+				move = _getch();
+			}
 		}
 		else if (*endGame == 2) {
 			cout << endl << "You lose(" << endl << endl;
-			for (int i = 0; i < 4; i++) {
-				for (int j = 0; j < 4; j++) {
-					pointCounter += field[i][j];
-				}
-			}
-			for (int i = 0; i < 4; i++) {
-				for (int j = 0; j < 4; j++) {
-					if (field[i][j] > maxCounter) {
-						maxCounter = field[i][j];
-					}
-				}
-			}
-			if (topCountingMoves < *сountingMoves) {
-				topCountingMoves = *сountingMoves;
-			}
-			if (topCountingReturnedMoves < *countingReturnedMoves) {
-				topCountingReturnedMoves = *countingReturnedMoves;
-			}
-			if (topPointCounter < pointCounter) {
-				topPointCounter = pointCounter;
-			}
-			if (topMaxCounter < maxCounter) {
-				topMaxCounter = maxCounter;
-			}
 			cout << "Your account: " << pointCounter << '!' << endl
 				<< "Your max number: " << maxCounter << endl
 				<< "Your number of moves: " << *сountingMoves << endl
 				<< "Your number of returned moves: " << *countingReturnedMoves << endl;
 			cout << endl;
-			cout << "Press any key to back..." << endl;
+			cout << "Press any ESC to back..." << endl;
 			move = _getch();
+			while (move != 27 && move != 32) {
+				move = _getch();
+			}
 		}
 
 		for (int i = 0; i < 4; i++) {
@@ -306,51 +332,6 @@ int main()
 		delete[] lastField;
 		lastField = nullptr;
 	}
-
-	delete locationXmenuModeAdventure;
-	locationXmenuModeAdventure = nullptr;
-
-	delete locationXmenuMode;
-	locationXmenuMode = nullptr;
-
-	delete locationXmenuStart;
-	locationXmenuStart = nullptr;
-
-	delete mode;
-	mode = nullptr;
-
-	delete endGame;
-	endGame = nullptr;
-
-	delete сountingMoves;
-	сountingMoves = nullptr;
-
-	delete countingReturnedMoves;
-	countingReturnedMoves = nullptr;
-
-	delete adventureModeLvl;
-	adventureModeLvl = nullptr;
-
-	delete adventureModeMaxLvl;
-	adventureModeLvl = nullptr;
-
-	for (int i = 0; i < 4; i++) {
-		delete[] menuModeAdventure[i];
-	}
-	delete[] menuModeAdventure;
-	menuModeAdventure = nullptr;
-
-	for (int i = 0; i < 4; i++) {
-		delete[] menuMode[i];
-	}
-	delete[] menuMode;
-	menuMode = nullptr;
-
-	for (int i = 0; i < 4; i++) {
-		delete[] menuStart[i];
-	}
-	delete[] menuStart;
-	menuStart = nullptr;
 
 	return 0;
 }
