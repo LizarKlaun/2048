@@ -5,9 +5,8 @@ void tutorial(int** field, char move, int* randOnBlock) {
 		}
 	}
 	int step = 0;
-	while (step >= 0) {
-		bool flag = false;
-		while (step >= 0) {
+	while (step < 7) {
+		while (step < 7) {
 			cout << "Tutorial" << endl;
 			cout << "Step: " << step << endl << endl;
 			if (step == 0) {
@@ -314,7 +313,6 @@ void tutorial(int** field, char move, int* randOnBlock) {
 
 				delete dificulty;
 				dificulty = nullptr;
-				step = -2;
 			}
 			cout << endl << endl << "Press any key to continue... ";
 			move = _getch();
