@@ -146,6 +146,7 @@
     <ClInclude Include="MenuStart.h" />
     <ClInclude Include="Move.h" />
     <ClInclude Include="Output.h" />
+    <ClInclude Include="Tutorial.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
