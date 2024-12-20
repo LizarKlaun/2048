@@ -1,4 +1,4 @@
-void startMenu(char** menuStart, int* locationXmenuStart, int topCountingMoves, int topCountingReturnedMoves, int topPointCounter, int topMaxCounter, char** menuMode, int* mode,  int* locationXmenuMode, char** menuModeAdventure, int* locationXmenuModeAdventure, int* adventureModeLvl, int* adventureModeMaxLvl, char** menuExit, int* locationXmenuExit, int* exit, char** menuDifficulty, int* locationXmenuDifficulty, int* dificulty) {
+void startMenu(char** menuStart, int* locationXmenuStart, int topCountingMoves, int topCountingReturnedMoves, int topPointCounter, int topMaxCounter, char** menuMode, int* mode,  int* locationXmenuMode, char** menuModeAdventure, int* locationXmenuModeAdventure, int* adventureModeLvl, int* adventureModeMaxLvl, char** menuExit, int* locationXmenuExit, int* exit, char** menuDifficulty, int* locationXmenuDifficulty, int* dificulty, int** field, int* randOnBlock) {
 	char move;
 	while (true) {
 		system("cls");
@@ -61,6 +61,10 @@ void startMenu(char** menuStart, int* locationXmenuStart, int topCountingMoves, 
 			if (*locationXmenuStart == 3) {
 				system("cls");
 				difficultyMenu(menuDifficulty, locationXmenuDifficulty, dificulty);
+			}
+			if (*locationXmenuStart == 4) {
+				system("cls");
+				tutorial(field, move, randOnBlock);
 			}
 			if (*locationXmenuStart == 5) {
 				system("cls");
