@@ -1,461 +1,426 @@
 ﻿#include <iostream>
-#include <string>
+#include <conio.h>
+#include <windows.h>
+#include <cctype>
 
 using namespace std;
 
-void gameOutput(int** field) { // здесь создаём мы функцию которая выводит всю игру
-	int a = 0; // нужно чтобы проверяло есть ли в массиве 2 мерные или ещё больше числа чтобы перестраиватся можно было типо то больше интерфейс то меньше
-	for (int i = 0; i < 4; i++) { // перебераем все числа во всех масивах
-		for (int j = 0; j < 4; j++) {
-			if (field[i][j] > a) { // cмотрим является ли оно двухзначное
-				a = field[i][j];
-			}
-		}
-	}
-	for (int i = 0; i < 4; i++) { // снова перебераем всё
-		for (int j = 0; j < 4; j++) {
-			if (a >= 100) { // если число двухзначное то интерфейсе будет в 2 раза больше пробелов но не в месте где число двухзначное
-				if (field[i][j] >= 100) {
-					cout << field[i][j] << " ";
-				}
-				else if (field[i][j] >= 10) {
-					cout << field[i][j] << "  ";
-				}
-				else {
-					cout << " " << field[i][j] << "  ";
-				}
-			} // иначе нет
-			else if (a >= 10) { // если трёхзначное то пробел цифре будет в 3 раза больше а в двухзначном будет в 2 раза больше пробел
-				if (field[i][j] >= 10) {
-					cout << field[i][j] << " ";
-				}
-				else {
-					cout << field[i][j] << "  ";
-				}
-			}
-			else {
-				cout << field[i][j] << " ";
-			}
-		}
-		if (a >= 100) {
-			cout << endl;
-		}
-		cout << endl;
-	}
-}
+#include "Move.h" // просчитывает ходы игрока
+#include "Output.h" // выводит поле 2024
+#include "ChoosingRandomNumber.h" // выбирает рандомной число для вставки в рандомное место на поле 2024
+#include "MenuDifficulty.h" // менюшка сложности игры
+#include "MenuModeAdventure.h" // менюшка адвенчура
+#include "MenuMode.h" // менюшка режимов
+#include "MenuExit.h" // менюшка выйти
+#include "MenuStart.h" // главная менюшка
+#include "GameEndDriving.h" // проверка на окончание игры для драйвинга
+#include "GameEndAdventure.h" // проверка на окончание игры для адвенчура
+#include "GameEndEndless.h" // проверка на окончание игры для бесконечного
+#include "GameEndClassic.h" // проверка на окончание игры для классика
+#include "CheckDataDriving.h" // проверка на ход игрока для драйвинга
+#include "CheckDataEndless.h"// проверка на ход игрока для бесконечного
+#include "CheckDataAdventure.h" // проверка на ход игрока для адвенчура
+#include "CheckDataClassic.h" // проверка на ход игрока для классика
 
-void selectionRandomOutput(int** field) { // функция для создания рандомного число в рандомном месте после хода пользователя
-	srand(time(NULL));
-	int randomNumber = rand() % 12;
-	int counterZero = 0;
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			if (field[i][j] == 0) {
-				counterZero++;
-			}
-		}
-	}
-	int randZero = rand() % counterZero;
-	int indexZero = 0;
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			if (field[i][j] == 0) {
-				if (indexZero == randZero) {
-					if (randomNumber < 8) {
-						field[i][j] = 2;
-						return;
-					}
-					else if (randomNumber < 11) {
-						field[i][j] = 4;
-						return;
-					}
-					else if (randomNumber == 11) {
-						field[i][j] = 8;
-						return;
-					}
-				}
-				else {
-					indexZero++;
-				}
-			}
-		}
-	}
-}
-
-void playerMoveOutput(int** field, char* move) { // cоздаём функцию для возможности ходить
-	if (move[0] == 'w' || move[0] == 'W') { // конкретно здесь он ходит на верх
-		for (int j = 0; j < 4; j++) { //цикл который переберает массив масивов
-			int a = 0; //нужны для проверки сколько раз уже применялась сумма
-			int b = 0; //тоже самое
-			int c = 0; //опять тоже самое
-			for (int i = 0; i < 4; i++) { // цикл который переберает все числа в масиве
-				if (field[i][j] != 0) { // чтобы не переберало все нолики в массивах
-					if (field[0][j] == field[1][j] && i != 0 && a != 1 && field[0][j] != 0 && field[0][j] == field[i][j] || field[0][j] == field[2][j] && field[1][j] == 0 && i != 0 && a != 1 || field[0][j] == field[3][j] && field[2][j] == 0 && field[1][j] == 0 && i != 0 && a != 1) { // проверяет на схожость чисел с теми который находятся перед ними и то что между ними стоят только 0 на указаной пользователем строчке чтобы их прибавить и на то что это число не является 1 числом в строчке
-						//cout << "plus : 0 : 0 . i: " << i << ". j: " << j << endl;
-						a = 1;
-						field[0][j] += field[i][j]; // плюсуем их
-						field[i][j] = 0; // то число удаляем
-					}
-					else if (field[1][j] == field[2][j] && i != 0 && i != 1 && b != 1 || field[1][j] == field[3][j] && field[2][j] == 0 && i != 0 && i != 1 && b != 1) { // тоже самое но в другом столбике только теперь проверяет что число и не 2 число в строчке 
-						//cout << "plus : 0 : 1" << endl;
-						b = 1;
-						field[1][j] += field[i][j];
-						field[i][j] = 0;
-					}
-					else if (field[2][j] == field[3][j] && i != 0 && i != 1 && i != 2 && c != 1) { //опять тоже самое но также в другом столбике и смотрит чт чилсло не является ещё и 3 в строчке
-						//cout << "plus : 0 : 2" << endl;
-						c = 1;
-						field[2][j] += field[i][j];
-						field[i][j] = 0;
-					}
-					// 4 число нет смысла проверять потому что такого в жизни не как не может произойти и типо смысл..... не вижу смысла
-					if (field[0][j] == 0) { // проверяет что 1 число в строчке уоторая указана пользователем выше не заполнено уже каким-то а если да то перемещяет предыдущее число в 1 строчку
-						//cout << "reverse : 0 : 0 . i: " << i << ". j: " << j << endl;
-						field[0][j] = field[i][j]; // перемещяем его
-						field[i][j] = 0; // удаляем прошлое
-					}//                                                                                                                                                                         |
-					else if (field[1][j] == 0 && i != 0) { // тоже самое но уже только если 1 число уже заполнено то проверяет заполнено ли 2 число в той строчке от пользователя и если да то \|/
-						//cout << "reverse : 0 : 1 . i: " << i << ". j: " << j << endl;
-						field[1][j] = field[i][j]; // мы перемещяем на конкретно то место в масиве которое свободно
-						field[i][j] = 0; // также забываем его
-					}
-					else if (field[2][j] == 0 && i != 0 && i != 1) { // и снова тоже самое что и выше но тут уже проверяется 3 число в строчке
-						//cout << "reverse : 0 : 2 . i: " << i << ". j: " << j << endl;
-						field[2][j] = field[i][j];
-						field[i][j] = 0;
-					}
-					// и здесь тоже проверять 4 смысла нет потому что такого не может быть
-				}
-			}
-		}
-	}
-
-	else if (move[0] == 'a' || move[0] == 'A') { // здесь уже влево. Что и как работает написал сверху /|\ 
-		for (int i = 0; i < 4; i++) { //                                                                |
-			int a = 0;
-			int b = 0;
-			int c = 0;
-			for (int j = 0; j < 4; j++) {
-				if (field[i][j] != 0) {
-					if (field[i][0] == field[i][1] && j != 0 && a != 1 && field[i][0] != 0 && field[i][0] == field[i][j] || field[i][0] == field[i][2] && field[i][1] == 0 && j != 0 && a != 1 || field[i][0] == field[i][3] && field[i][1] == 0 && field[i][2] == 0 && j != 0 && a != 1) {
-						//cout << "plus : 1 : 0" << endl;
-						a = 1;
-						field[i][0] += field[i][j];
-						field[i][j] = 0;
-					}
-					else if (field[i][1] == field[i][2] && j != 0 && j != 1 && b != 1 || field[i][1] == field[i][3] && field[i][2] == 0 && j != 0 && j != 1 && b != 1) {
-						//cout << "plus : 1 : 1" << endl;
-						b = 1;
-						field[i][1] += field[i][j];
-						field[i][j] = 0;
-					}
-					else if (field[i][2] == field[i][3] && j != 0 && j != 1 && j != 2 && c != 1) {
-						//cout << "plus : 1 : 2" << endl;
-						c = 1;
-						field[i][2] += field[i][j];
-						field[i][j] = 0;
-					}
-					if (field[i][0] == 0) {
-						//cout << "reverse : 1 : 0 . i: " << i << ". j: " << j << endl;
-						field[i][0] = field[i][j];
-						field[i][j] = 0;
-					}
-					else if (field[i][1] == 0) {
-						//cout << "reverse : 1 : 1 . i: " << i << ". j: " << j << endl;
-						field[i][1] = field[i][j];
-						field[i][j] = 0;
-					}
-					else if (field[i][2] == 0 && j != 0) {
-						//cout << "reverse : 1 : 2 . i: " << i << ". j: " << j << endl;
-						field[i][2] = field[i][j];
-						field[i][j] = 0;
-					}
-				}
-			}
-		}
-	}
-
-	else if (move[0] == 's' || move[0] == 'S') { // теперь вниз... что и как сверху и ещё выше
-		for (int j = 3; j > -1; j--) {
-			int a = 0;
-			int b = 0;
-			int c = 0;
-			for (int i = 3; i > -1; i--) {
-				if (field[i][j] != 0) {
-					if (field[3][j] == field[2][j] && i != 3 && a != 1 && field[3][j] != 0 && field[3][j] == field[i][j] || field[3][j] == field[1][j] && field[2][j] == 0 && i != 3 && a != 1 || field[3][j] == field[0][j] && field[2][j] == 0 && field[1][j] == 0 && i != 3 && a != 1) {
-						//cout << "plus : 2 : 0" << endl;
-						a = 1;
-						field[3][j] += field[i][j];
-						field[i][j] = 0;
-					}
-					else if (field[2][j] == field[1][j] && i != 2 && i != 3 && b != 1 || field[2][j] == field[0][j] && field[1][j] == 0 && i != 2 && i != 3 && b != 1) {
-						//cout << "plus : 2 : 1" << endl;
-						b = 1;
-						field[2][j] += field[i][j];
-						field[i][j] = 0;
-					}
-					else if (field[1][j] == field[0][j] && i != 1 && i != 2 && i != 3 && c != 1) {
-						//cout << "plus : 2: 2" << endl;
-						c = 1;
-						field[1][j] += field[i][j];
-						field[i][j] = 0;
-					}
-					if (field[3][j] == 0) {
-						//cout << "reverse : 2 : 0 . i: " << i << ". j: " << j << endl;
-						field[3][j] = field[i][j];
-						field[i][j] = 0;
-					}
-					else if (field[2][j] == 0 && i != 3) {
-						//cout << "reverse : 2 : 1 . i: " << i << ". j: " << j << endl;
-						field[2][j] = field[i][j];
-						field[i][j] = 0;
-					}
-					else if (field[1][j] == 0 && i != 3) {
-						//cout << "reverse : 2 : 2 . i: " << i << ". j: " << j << endl;
-						field[1][j] = field[i][j];
-						field[i][j] = 0;
-					}
-				}
-			}
-		}
-	}
-
-	else if (move[0] == 'd' || move[0] == 'D') { // сейчас направо...... что да как это надо листать выше и ещё выше почти до потолка
-		for (int i = 3; i > -1; i--) {
-			int a = 0;
-			int b = 0;
-			int c = 0;
-			for (int j = 3; j > -1; j--) {
-				if (field[i][j] != 0) {
-					if (field[i][3] == field[i][2] && j != 3 && a != 1 && field[i][3] != 0 && field[i][3] == field[i][j] || field[i][3] == field[i][1] && field[i][2] == 0 && j != 3 && a != 1 || field[i][3] == field[i][0] && field[i][2] == 0 && field[i][1] == 0 && j != 3 && a != 1) {
-						//cout << "plus : 1 : 0" << endl;
-						a = 1;
-						field[i][3] += field[i][j];
-						field[i][j] = 0;
-					}
-					else if (field[i][2] == field[i][1] && j != 2 && j != 3 && b != 1 || field[i][2] == field[i][0] && field[i][1] == 0 && j != 3 && j != 2 && b != 1) {
-						//cout << "plus : 1 : 1" << endl;
-						b = 1;
-						field[i][2] += field[i][j];
-						field[i][j] = 0;
-					}
-					else if (field[i][1] == field[i][0] && j != 1 && j != 2 && j != 3 && c != 1) {
-						//cout << "plus : 1 : 2" << endl;
-						c = 1;
-						field[i][1] += field[i][j];
-						field[i][j] = 0;
-					}
-					if (field[i][3] == 0) {
-						//cout << "reverse : 1 : 0 . i: " << i << ". j: " << j << endl;
-						field[i][3] = field[i][j];
-						field[i][j] = 0;
-					}
-					else if (field[i][2] == 0 && j != 3) {
-						//cout << "reverse : 1 : 1 . i: " << i << ". j: " << j << endl;
-						field[i][2] = field[i][j];
-						field[i][j] = 0;
-					}
-					else if (field[i][1] == 0 && j != 3) {
-						//cout << "reverse : 1 : 2 . i: " << i << ". j: " << j << endl;
-						field[i][1] = field[i][j];
-						field[i][j] = 0;
-					}
-				}
-			}
-		}
-	}
-}
-
-void dataCheck(int** field, char* move, int* countingMoves, int*** lastField) {
-	cout << "LOL1" << endl;
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			lastField[*countingMoves][i][j] = field[i][j];
-		}
-	}
-
-	int*** tempLastField = new int** [*countingMoves];
-	for (int k = 0; k < *countingMoves; k++) {
+int*** addOneMoveLastField(int*** lastField, int* countingMoves, int** field) { // добавление 1 елемента массива и запись на него последней ход игрока
+	int*** tempLastField = new int** [*countingMoves + 1];
+	for (int k = 0; k < *countingMoves + 1; ++k) {
 		tempLastField[k] = new int* [4];
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 4; ++i) {
 			tempLastField[k][i] = new int[4];
-			for (int j = 0; j < 4; j++) {
+		}
+	}
+	for (int k = 0; k < *countingMoves; ++k) {
+		for (int i = 0; i < 4; ++i) {
+			for (int j = 0; j < 4; ++j) {
 				tempLastField[k][i][j] = lastField[k][i][j];
 			}
 		}
 	}
-
-	cout << "LOL2" << endl;
-	for (int k = 0; k < *countingMoves; ++k) {
-		for (int i = 0; i < 4; ++i) {
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			tempLastField[*countingMoves - 1][i][j] = field[i][j];
+		}
+	}
+	for (int k = 0; k < *countingMoves; k++) {
+		for (int i = 0; i < 4; i++) {
 			delete[] lastField[k][i];
 		}
 		delete[] lastField[k];
 	}
 	delete[] lastField;
 
-	lastField = new int** [*countingMoves + 1];
-	for (int k = 0; k < *countingMoves; k++) {
-		lastField[k] = new int* [4];
-		for (int i = 0; i < 4; i++) {
-			lastField[k][i] = new int[4];
-			for (int j = 0; j < 4; j++) {
-				lastField[k][i][j] = tempLastField[k][i][j];
-			}
-		}
-	}
-
-	lastField[*countingMoves + 1] = new int* [4];
-	for (int i = 0; i < 4; ++i) {
-		lastField[*countingMoves + 1][i] = new int[4];
-		for (int j = 0; j < 4; j++) {
-			lastField[*countingMoves + 1][i][j] = field[i][j];
-		}
-	}
-
-	for (int k = 0; k < *countingMoves; ++k) {
-		for (int i = 0; i < 4; ++i) {
-			delete[] tempLastField[k][i];
-		}
-		delete[] tempLastField[k];
-	}
-	delete[] tempLastField;
-	cout << "Make your " << *countingMoves << "st move: ";
-	cin >> move; // даём возмонжость выбрать куда походить
-	playerMoveOutput(field, move);
-	int similarityField = 0;
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			if (lastField[*countingMoves+1][i][j] != field[i][j]) {
-				similarityField = 1;
-			}
-		}
-	}
-	if (similarityField == 1) {
-		++*countingMoves; // прибавляем к числу ходов 1
-		selectionRandomOutput(field); // вызываем рандом
-		gameOutput(field); // и показываем пользователю что он сделал
-	}
-	else if (*countingMoves > 0) {
-		if (move[0] == 'b' || move[0] == 'b' && move[1] == 'a' && move[2] == 'c' && move[3] == 'k') {
-			--*countingMoves;
-			for (int i = 0; i < 4; i++) {
-				for (int j = 0; j < 4; j++) {
-					field[i][j] = lastField[*countingMoves][i][j];
-				}
-			}
-			gameOutput(field); // и показываем пользователю что он сделал
-		}
-	}
-	else {
-		return;
-	}
+	return tempLastField;
 }
 
-void gameEnd(int** field, int* endGame) {
-	int similarityСells = 0;
-	for (int i = 0; i < 4; i++) { // проверка на конец игры
-		for (int j = 0; j < 4; j++) {
-			if (field[i][j] == 2048) {
-				*endGame = 1;
-			}
-			if (i != 3) {
-				if (field[i][j] == field[i + 1][j]) {
-					similarityСells += 1;
-				}
-			}
-			if (j != 3) {
-				if (field[i][j] == field[i][j + 1]) {
-					similarityСells += 1;
-				}
-			}
-			if (field[i][j] == 0) {
-				similarityСells += 1;
-			}
-		}
+int** addOneModeLastCountingReturnedMoves(int** lastNumberOfLegalMove, int* coutntingMoves, int* numberOfLegalMoves) {
+	int** tempLastNumberOfLegalMoves = new int* [*coutntingMoves+1];
+	for (int i = 0; i < 1; i++) {
+		tempLastNumberOfLegalMoves[i] = new int(1);
 	}
-	if (similarityСells == 0) {
-		*endGame = 2;
+	for (int i = 0; i < *coutntingMoves; i++) {
+		tempLastNumberOfLegalMoves[i] = lastNumberOfLegalMove[i];
 	}
+	tempLastNumberOfLegalMoves[*coutntingMoves - 1] = new int(*numberOfLegalMoves);
+
+	delete[] lastNumberOfLegalMove;
+
+	return tempLastNumberOfLegalMoves;
 }
 
 int main()
 {
-	int** field = new int* [4]; // cоздаём массив массивов
+	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE); // Получаем хэндл консоли
+	CONSOLE_CURSOR_INFO cursorInfo;
+	GetConsoleCursorInfo(consoleHandle, &cursorInfo); // Получаем информацию о курсоре
+	cursorInfo.bVisible = false; // Скрываем курсор
+	SetConsoleCursorInfo(consoleHandle, &cursorInfo);
 
-	for (int i = 0; i < 4; i++) { // заполняем его массивами
-		field[i] = new int[4];
-	}
-
-	for (int i = 0; i < 4; i++) { // заполняем массив чисел 
-		for (int j = 0; j < 4; j++) {
-			field[i][j] = 0;
-		}
-	}
-
-	int*** lastField = new int** [1];
-	for (int k = 0; k < 1; k++) {
-		lastField[k] = new int* [4];
-		for (int i = 0; i < 4; i++) {
-			lastField[k][i] = new int[4];
-		}
-	}
-
-	//field[0][0] = 128;
-	//field[1][0] = 64;
-	//field[2][0] = 32;
-	//field[3][0] = 8;
-	//
-	//field[0][1] = 64;
-	//field[1][1] = 32;
-	//field[2][1] = 16;
-	//field[3][1] = 2;
-	//
-	//field[0][2] = 32;
-	//field[1][2] = 16;
-	//field[2][2] = 8;
-	//field[3][2] = 4;
-	//
-	//field[0][3] = 2;
-	//field[1][3] = 8;
-	//field[2][3] = 2;
-	//field[3][3] = 0;
-
-	selectionRandomOutput(field); // по игре сразу 2 создают числа а не 1
-	selectionRandomOutput(field); // а вот и 2
-	gameOutput(field);
 	int* endGame = new int(0);
-	char move[10]; // создаём переменную отвечающию за выбраный ход игрока
+	char move = 'f'; // создаём переменную отвечающию за выбраный ход игрока
 	int* сountingMoves = new int(1); // число его ходов
-	do { // бесконечность не предел
-		dataCheck(field, move, сountingMoves, lastField);
-		gameEnd(field, endGame);
-	} while (*endGame == 0);
-	if (*endGame == 1) {
-		cout << "You WIN!!!" << endl;
-	}
-	else if (*endGame == 2) {
-		cout << "You lose(";
-	}
+	int* countingReturnedMoves = new int(0);
+	int* countingOfLegalReturnedMoves = new int(0);
+	int* numberOfLegalMoves = new int(0);
+	int* randOnBlock = new int(0);
 
-	delete endGame;
-	endGame = nullptr;
+	//Статистика{
+	int pointCounter = 0;
+	int maxCounter = 0;
+	int topCountingMoves = 0;
+	int topCountingReturnedMoves = 0;
+	int topPointCounter = 0;
+	int topMaxCounter = 0;
+	//}
 
-	delete сountingMoves;
-	сountingMoves = nullptr;
+	char** menuStart = new char* [6];
+	int* locationXmenuStart = new int(0);
+	menuStart[0] = new char[11] {'1', '.', ' ', 'S', 't', 'a', 'r', 't', ' ', '|', '\0'};
+	menuStart[1] = new char[10] {'2', '.', ' ', 'I', 'n', 'f', 'o', ' ', '|', '\0'};
+	menuStart[2] = new char[15] {'3', '.', ' ', 'G', 'a', 'm', 'e', ' ', 'm', 'o', 'd', 'e', ' ', '|', '\0'};
+	menuStart[3] = new char[16] {'4', '.', ' ', 'D', 'i', 'f', 'f', 'i', 'c', 'u', 'l', 't', 'y', ' ', '|', '\0'};
+	menuStart[4] = new char[14] {'5', '.', ' ', 'T', 'u', 't', 'o', 'r', 'i', 'a', 'l', ' ', '|', '\0'};
+	menuStart[5] = new char[9] {'6', '.', ' ', 'E', 'x', 'i', 't', '\0'};
 
-	for (int i = 0; i < 4; i++) {
-		delete[] field[i];
-	}
-	delete[] field;
-	field = nullptr;
+	char** menuExit = new char* [2];
+	int* locationXmenuExit = new int(1);
+	menuExit[0] = new char[9] {'1', '.', ' ', 'Y', 'e', 's', ' ', '|', '\0'};
+	menuExit[1] = new char[6] {'2', '.', ' ', 'N', 'o', '\0'};
 
-	for (int i = 0; i < 4; ++i) {
-		for (int j = 0; j < 4; ++j) {
-			delete[] lastField[i][j];
+	int* mode = new int(0);
+
+	char** menuMode = new char* [5];
+	int* locationXmenuMode = new int(0);
+	menuMode[0] = new char[13] {'1', '.', ' ', 'C', 'l', 'a', 's', 's', 'i', 'c', ' ', '|', '\0'};
+	menuMode[1] = new char[15] {'2', '.', ' ', 'A', 'd', 'v', 'e', 'n', 't', 'u', 'r', 'e', ' ', '|', '\0'};
+	menuMode[2] = new char[13] {'3', '.', ' ', 'E', 'n', 'd', 'l', 'e', 's', 's', ' ', '|', '\0'};
+	menuMode[3] = new char[13] {'4', '.', ' ', 'D', 'r', 'i', 'v', 'i', 'n', 'g', ' ', '|', '\0'};
+	menuMode[4] = new char[8] {'5', '.', ' ', 'B', 'a', 'c', 'k', '\0'};
+
+	int* adventureModeLvl = new int(0);
+	int* adventureModeMaxLvl = new int(1);
+
+	char** menuModeAdventure = new char* [7];
+	int* locationXmenuModeAdventure = new int(0);
+	menuModeAdventure[0] = new char[13] {'1', '.', ' ', 'F', 'i', 'r', 's', 't', ' ', 'l', 'v', 'l', '\0'};
+	menuModeAdventure[1] = new char[14] {'2', '.', ' ', 'S', 'e', 'c', 'o', 'n', 'd', ' ', 'l', 'v', 'l', '\0'};
+	menuModeAdventure[2] = new char[13] {'3', '.', ' ', 'T', 'h', 'i', 'r', 'd', ' ', 'l', 'v', 'l', '\0'};
+	menuModeAdventure[3] = new char[14] {'4', '.', ' ', 'F', 'o', 'u', 'r', 't', 'h', ' ', 'l', 'v', 'l', '\0'};
+	menuModeAdventure[4] = new char[13] {'5', '.', ' ', 'F', 'i', 'f', 't', 'h', ' ', 'l', 'v', 'l', '\0'};
+	menuModeAdventure[5] = new char[13] {'6', '.', ' ', 'S', 'i', 'x', 't', 'h', ' ', 'l', 'v', 'l', '\0'};
+	menuModeAdventure[6] = new char[8] {'7', '.', ' ', 'B', 'a', 'c', 'k', '\0'};
+
+	int* dificulty = new int(0);
+
+	char** menuDifficulty = new char* [6];
+	int* locationXmenuDifficulty = new int(0);
+	menuDifficulty[0] = new char[12] {'1', '.', ' ', 'P', 'e', 'a', 'c', 'e', 'f', 'u', 'l', '\0'};
+	menuDifficulty[1] = new char[8] {'2', '.', ' ', 'E', 'a', 's', 'y', '\0'};
+	menuDifficulty[2] = new char[10] {'3', '.', ' ', 'M', 'e', 'd', 'i', 'u', 'm', '\0'};
+	menuDifficulty[3] = new char[8] {'4', '.', ' ', 'H', 'a', 'r', 'd', '\0'};
+	menuDifficulty[4] = new char[8] {'5', '.', ' ', 'B', 'a', 'c', 'k', '\0'};
+
+	while (true) {
+		*сountingMoves = 1;
+		*countingReturnedMoves = 0;
+		*endGame = 0;
+		*numberOfLegalMoves = 3;
+		pointCounter = 0;
+		maxCounter = 0;
+
+		int** lastNumberOfLegalMove = new int* [1];
+		lastNumberOfLegalMove[0] = new int(3);
+
+		int** field = new int* [4]; // cоздаём массив массивов
+		for (int i = 0; i < 4; i++) { // заполняем его массивами
+			field[i] = new int[4];
 		}
-		delete[] lastField[i];
+		for (int i = 0; i < 4; i++) { // заполняем массив чисел 
+			for (int j = 0; j < 4; j++) {
+				field[i][j] = 0;
+			}
+		}
+
+		int*** lastField = new int** [1];
+		for (int k = 0; k < 1; k++) {
+			lastField[k] = new int* [4];
+			for (int i = 0; i < 4; i++) {
+				lastField[k][i] = new int[4];
+			}
+		}
+		for (int k = 0; k < 1; k++) {
+			for (int i = 0; i < 4; i++) {
+				for (int j = 0; j < 4; j++) {
+					lastField[k][i][j] = 0;
+				}
+			}
+		}
+
+		int* exit = new int(0);
+		startMenu(menuStart, locationXmenuStart, topCountingMoves, topCountingReturnedMoves, topPointCounter, topMaxCounter, menuMode, mode, locationXmenuMode, menuModeAdventure, locationXmenuModeAdventure, adventureModeLvl, adventureModeMaxLvl, menuExit, locationXmenuExit, exit, menuDifficulty, locationXmenuDifficulty, dificulty);
+		if (*exit == 1) {
+			for (int i = 0; i < *сountingMoves; i++) {
+				delete lastNumberOfLegalMove[i];
+			}
+			delete[] lastNumberOfLegalMove;
+			lastNumberOfLegalMove = nullptr;
+
+			for (int i = 0; i < 4; i++) {
+				delete[] field[i];
+			}
+			delete[] field;
+			field = nullptr;
+
+			for (int k = 0; k < *сountingMoves; ++k) {
+				for (int i = 0; i < 4; ++i) {
+					delete[] lastField[k][i];
+				}
+				delete[] lastField[k];
+			}
+			delete[] lastField;
+			lastField = nullptr;
+
+			delete locationXmenuModeAdventure;
+			locationXmenuModeAdventure = nullptr;
+
+			delete locationXmenuMode;
+			locationXmenuMode = nullptr;
+
+			delete locationXmenuDifficulty;
+			locationXmenuDifficulty = nullptr;
+
+			delete locationXmenuStart;
+			locationXmenuStart = nullptr;
+
+			delete mode;
+			mode = nullptr;
+
+			delete endGame;
+			endGame = nullptr;
+
+			delete сountingMoves;
+			сountingMoves = nullptr;
+
+			delete countingReturnedMoves;
+			countingReturnedMoves = nullptr;
+
+			delete numberOfLegalMoves;
+			numberOfLegalMoves = nullptr;
+
+			delete countingOfLegalReturnedMoves;
+			countingOfLegalReturnedMoves = nullptr;
+
+			delete adventureModeLvl;
+			adventureModeLvl = nullptr;
+
+			delete adventureModeMaxLvl;
+			adventureModeLvl = nullptr;
+
+			for (int i = 0; i < 4; i++) {
+				delete[] menuModeAdventure[i];
+			}
+			delete[] menuModeAdventure;
+			menuModeAdventure = nullptr;
+
+			for (int i = 0; i < 4; i++) {
+				delete[] menuMode[i];
+			}
+			delete[] menuMode;
+			menuMode = nullptr;
+
+			for (int i = 0; i < 4; i++) {
+				delete[] menuDifficulty[i];
+			}
+			delete[] menuDifficulty;
+			menuDifficulty = nullptr;
+
+			for (int i = 0; i < 4; i++) {
+				delete[] menuStart[i];
+			}
+			delete[] menuStart;
+			menuStart = nullptr;
+
+			return 0;
+		}
+		
+		//modeAdventureMenu();
+
+		//field[0][0] = 0;
+		//field[1][0] = 0;
+		//field[2][0] = 0;
+		//field[3][0] = 2;
+		//
+		//field[0][1] = 0;
+		//field[1][1] = 64;
+		//field[2][1] = -33;
+		//field[3][1] = 2;
+		//
+		//field[0][2] = 0;
+		//field[1][2] = 0;
+		//field[2][2] = 0;
+		//field[3][2] = 0;
+		//
+		//field[0][3] = 0;
+		//field[1][3] = 0;
+		//field[2][3] = 0;
+		//field[3][3] = 0;
+
+		selectionRandomOutput(field, dificulty, randOnBlock); // а вот и 2
+		selectionRandomOutput(field, dificulty, randOnBlock); // по игре сразу 2 создают числа а не 1
+
+		switch (*mode) {
+		case 0:
+			cout << "Classic mode" << endl << endl;
+			break;
+		case 1:
+			cout << "Adventure mode" << endl << menuModeAdventure[*adventureModeLvl - 1] << endl << endl;
+			break;
+		case 2:
+			cout << "Endless mode" << endl << endl;
+			break;
+		case 3:
+			cout << "Driving mode" << endl << endl;
+			break;
+		}
+
+		switch (*dificulty) {
+		case 0:
+			cout << "Dificulty " << menuDifficulty[*dificulty] << endl << endl;
+			*countingOfLegalReturnedMoves = -1;
+			break;
+		case 1:
+			cout << "Dificulty " << menuDifficulty[*dificulty] << endl << endl;
+			*countingOfLegalReturnedMoves = 15;
+			break;
+		case 2:
+			cout << "Dificulty " << menuDifficulty[*dificulty] << endl << endl;
+			*countingOfLegalReturnedMoves = 7;
+			break;
+		case 3:
+			cout << "Dificulty " << menuDifficulty[*dificulty] << endl << endl;
+			*countingOfLegalReturnedMoves = 3;
+			break;
+		}
+
+		gameOutput(field);
+		do { // бесконечность не предел
+			lastField = addOneMoveLastField(lastField, сountingMoves, field);
+			if (*mode == 0) {
+				dataCheckClassic(field, move, сountingMoves, lastField, countingReturnedMoves, endGame, dificulty, countingOfLegalReturnedMoves, menuDifficulty, randOnBlock);
+				gameOutput(field); // и показываем пользователю что он сделал
+				gameEndClassic(field, endGame);
+			}
+			else if (*mode == 1) {
+				dataCheckAdventure(field, move, сountingMoves, lastField, countingReturnedMoves, endGame, adventureModeMaxLvl, adventureModeLvl, menuModeAdventure, dificulty, randOnBlock, menuDifficulty, countingOfLegalReturnedMoves);
+				gameOutput(field); // и показываем пользователю что он сделал
+				if (*endGame == 1) {
+					cout << endl << "You complete this lvl and you unlocked next lvl in Adventure mode!!!" << endl;
+				}
+				gameEndAdvenchure(field, endGame, adventureModeLvl, adventureModeMaxLvl, сountingMoves);
+			}
+			else if (*mode == 2) {
+				dataCheckEndless(field, move, сountingMoves, lastField, countingReturnedMoves, endGame, dificulty, randOnBlock, menuDifficulty, countingOfLegalReturnedMoves);
+				gameOutput(field); // и показываем пользователю что он сделал
+				gameEndEndless(field, endGame);
+			}
+			else if (*mode == 3) {
+				lastNumberOfLegalMove = addOneModeLastCountingReturnedMoves(lastNumberOfLegalMove, сountingMoves, numberOfLegalMoves);
+				dataCheckDriving(field, move, сountingMoves, lastField, countingReturnedMoves, endGame, numberOfLegalMoves, lastNumberOfLegalMove, dificulty, randOnBlock, menuDifficulty, countingOfLegalReturnedMoves);
+				gameOutput(field); // и показываем пользователю что он сделал
+				gameEndDriving(field, endGame, numberOfLegalMoves);
+			}
+		} while (*endGame == 0);
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				if (field[i][j] < 0) {
+					pointCounter += abs(field[i][j] / 10);
+				}
+				else {
+					pointCounter += field[i][j];
+				}
+			}
+		}
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				if (field[i][j] > maxCounter) {
+					maxCounter = field[i][j];
+				}
+			}
+		}
+		if (topCountingMoves < *сountingMoves) {
+			topCountingMoves = *сountingMoves;
+		}
+		if (topCountingReturnedMoves < *countingReturnedMoves) {
+			topCountingReturnedMoves = *countingReturnedMoves;
+		}
+		if (topPointCounter < pointCounter) {
+			topPointCounter = pointCounter;
+		}
+		if (topMaxCounter < maxCounter) {
+			topMaxCounter = maxCounter;
+		}
+		if (*endGame == 1) {
+			cout << endl << "You WIN!!!" << endl << endl;
+			cout << "Your account: " << pointCounter << '!' << endl
+				<< "Your max number: " << maxCounter << endl
+				<< "Your number of moves: " << *сountingMoves << endl
+				<< "Your number of returned moves: " << *countingReturnedMoves << endl;
+			cout << endl;
+			cout << "Press any ESC to back..." << endl;
+			move = _getch();
+			while (move != 27 && move != 32) {
+				move = _getch();
+			}
+		}
+		else if (*endGame == 2) {
+			cout << endl << "You lose(" << endl << endl;
+			cout << "Your account: " << pointCounter << '!' << endl
+				<< "Your max number: " << maxCounter << endl
+				<< "Your number of moves: " << *сountingMoves << endl
+				<< "Your number of returned moves: " << *countingReturnedMoves << endl;
+			cout << endl;
+			cout << "Press any ESC to back..." << endl;
+			move = _getch();
+			while (move != 27 && move != 32) {
+				move = _getch();
+			}
+		}
+
+		for (int i = 0; i < 4; i++) {
+			delete[] field[i];
+		}
+		delete[] field;
+		field = nullptr;
+
+		for (int k = 0; k < *сountingMoves; ++k) {
+			for (int i = 0; i < 4; ++i) {
+				delete[] lastField[k][i];
+			}
+			delete[] lastField[k];
+		}
+		delete[] lastField;
+		lastField = nullptr;
 	}
-	delete[] lastField;
-	lastField = nullptr;
+
+	return 0;
 }

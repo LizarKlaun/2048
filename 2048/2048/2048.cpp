@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <string>
 
 using namespace std;
@@ -267,26 +267,15 @@ void playerMoveOutput(int** field, char* move) { // cоздаём функцию
 }
 
 void dataCheck(int** field, char* move, int* countingMoves, int*** lastField) {
-	cout << "LOL1" << endl;
-	for (int i = 0; i < 4; i++) {
-		lastField[*countingMoves][i] = field[i];
-		for (int j = 0; j < 4; j++) {
-			lastField[*countingMoves][i][j] = field[i][j];
-		}
-	}
-
+	int k = *countingMoves;
 	int*** tempLastField = new int** [*countingMoves];
 	for (int k = 0; k < *countingMoves; k++) {
-		tempLastField[k] = new int* [4];
-		for (int i = 0; i < 4; i++) {
-			tempLastField[k][i] = new int[4];
-			for (int j = 0; j < 4; j++) {
+		for (int i = 0; i < i; i++) {
+			for (int j = 0; j < j; j++) {
 				tempLastField[k][i][j] = lastField[k][i][j];
 			}
 		}
 	}
-
-	cout << "LOL2" << endl;
 	for (int k = 0; k < *countingMoves; ++k) {
 		for (int i = 0; i < 4; ++i) {
 			delete[] lastField[k][i];
@@ -294,57 +283,44 @@ void dataCheck(int** field, char* move, int* countingMoves, int*** lastField) {
 		delete[] lastField[k];
 	}
 	delete[] lastField;
-
-	lastField = new int** [*countingMoves + 1];
+	lastField = nullptr;
+	int*** tempLastField = new int** [*countingMoves + 1];
 	for (int k = 0; k < *countingMoves; k++) {
-		lastField[k] = new int* [4];
-		for (int i = 0; i < 4; i++) {
-			lastField[k][i] = new int[4];
-			for (int j = 0; j < 4; j++) {
+		for (int i = 0; i < i; i++) {
+			for (int j = 0; j < j; j++) {
 				lastField[k][i][j] = tempLastField[k][i][j];
 			}
 		}
 	}
-
-	lastField[*countingMoves + 1] = new int* [4];
-	for (int i = 0; i < 4; ++i) {
-		lastField[*countingMoves + 1][i] = new int[4];
+	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			lastField[*countingMoves + 1][i][j] = field[i][j];
+			lastField[*countingMoves+1][i][j] = field[i][j];
 		}
 	}
-
-	for (int k = 0; k < *countingMoves; ++k) {
-		for (int i = 0; i < 4; ++i) {
-			delete[] tempLastField[k][i];
-		}
-		delete[] tempLastField[k];
-	}
-	delete[] tempLastField;
-	cout << "Make your " << *countingMoves << "st move: ";
+	cout << "Make your " << *countingMoves + 1 << "st move: ";
 	cin >> move; // даём возмонжость выбрать куда походить
 	playerMoveOutput(field, move);
 	int similarityField = 0;
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			if (lastField[*countingMoves+1][i][j] != field[i][j]) {
+			if (lastField[k][i][j] != field[i][j]) {
 				similarityField = 1;
 			}
 		}
 	}
 	if (similarityField == 1) {
-		++*countingMoves; // прибавляем к числу ходов 1
+		++ * countingMoves; // прибавляем к числу ходов 1
 		selectionRandomOutput(field); // вызываем рандом
 		gameOutput(field); // и показываем пользователю что он сделал
 	}
 	else if (*countingMoves > 0) {
 		if (move[0] == 'b' || move[0] == 'b' && move[1] == 'a' && move[2] == 'c' && move[3] == 'k') {
-			--*countingMoves;
 			for (int i = 0; i < 4; i++) {
 				for (int j = 0; j < 4; j++) {
-					field[i][j] = lastField[*countingMoves][i][j];
+					field[i][j] = lastField[k - 1][i][j];
 				}
 			}
+			-- * countingMoves; // прибавляем к числу ходов 1
 			gameOutput(field); // и показываем пользователю что он сделал
 		}
 	}
@@ -427,7 +403,7 @@ int main()
 	gameOutput(field);
 	int* endGame = new int(0);
 	char move[10]; // создаём переменную отвечающию за выбраный ход игрока
-	int* сountingMoves = new int(1); // число его ходов
+	int* сountingMoves = new int(0); // число его ходов
 	do { // бесконечность не предел
 		dataCheck(field, move, сountingMoves, lastField);
 		gameEnd(field, endGame);
