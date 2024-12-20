@@ -8,10 +8,11 @@ using namespace std;
 #include "Move.h" // просчитывает ходы игрока
 #include "Output.h" // выводит поле 2024
 #include "ChoosingRandomNumber.h" // выбирает рандомной число для вставки в рандомное место на поле 2024
+#include "MenuExit.h" // менюшка выйти
+#include "Tutorial.h" // менюшка режимов
 #include "MenuDifficulty.h" // менюшка сложности игры
 #include "MenuModeAdventure.h" // менюшка адвенчура
 #include "MenuMode.h" // менюшка режимов
-#include "MenuExit.h" // менюшка выйти
 #include "MenuStart.h" // главная менюшка
 #include "GameEndDriving.h" // проверка на окончание игры для драйвинга
 #include "GameEndAdventure.h" // проверка на окончание игры для адвенчура
@@ -177,7 +178,7 @@ int main()
 		}
 
 		int* exit = new int(0);
-		startMenu(menuStart, locationXmenuStart, topCountingMoves, topCountingReturnedMoves, topPointCounter, topMaxCounter, menuMode, mode, locationXmenuMode, menuModeAdventure, locationXmenuModeAdventure, adventureModeLvl, adventureModeMaxLvl, menuExit, locationXmenuExit, exit, menuDifficulty, locationXmenuDifficulty, dificulty);
+		startMenu(menuStart, locationXmenuStart, topCountingMoves, topCountingReturnedMoves, topPointCounter, topMaxCounter, menuMode, mode, locationXmenuMode, menuModeAdventure, locationXmenuModeAdventure, adventureModeLvl, adventureModeMaxLvl, menuExit, locationXmenuExit, exit, menuDifficulty, locationXmenuDifficulty, dificulty, field, randOnBlock);
 		if (*exit == 1) {
 			for (int i = 0; i < *сountingMoves; i++) {
 				delete lastNumberOfLegalMove[i];
@@ -300,6 +301,19 @@ int main()
 			break;
 		case 3:
 			cout << "Driving mode" << endl << endl;
+			if (*dificulty == 0) {
+				*numberOfLegalMoves = 10;
+			}
+			else if (*dificulty == 1) {
+				*numberOfLegalMoves = 7;
+			}
+
+			else if (*dificulty == 2) {
+				*numberOfLegalMoves = 3;
+			}
+			else {
+				*numberOfLegalMoves = 2;
+			}
 			break;
 		}
 

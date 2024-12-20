@@ -68,5 +68,8 @@
     <ClInclude Include="MenuDifficulty.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="Tutorial.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
