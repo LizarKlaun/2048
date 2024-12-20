@@ -1,4 +1,4 @@
-void dataCheckClassic(int** field, char move, int* countingMoves, int*** lastField, int* countingReturnedMoves, int* endGame, int* dificulty, int* countingOfLegalReturnedMoves, char** menuDifficulty, int* randOnBlock) {
+void dataCheckDriving(int** field, char move, int* countingMoves, int*** lastField, int* countingReturnedMoves, int* endGame, int* numberOfLegalMoves, int** lastNumberOfLegalMove, int* dificulty, int* randOnBlock, char** menuDifficulty, int* countingOfLegalReturnedMoves) {
 	while (true) {
 		if (*countingOfLegalReturnedMoves != 0 && *dificulty != 0) {
 			cout << "You can go back " << *countingOfLegalReturnedMoves << " times" << endl;
@@ -7,15 +7,16 @@ void dataCheckClassic(int** field, char move, int* countingMoves, int*** lastFie
 			cout << "You can go back forever" << endl;
 		}
 		else {
-			cout << "You can't go back" << endl;
+			cout << "You can't go back" << endl;	
 		}
+		cout << "You have " << *numberOfLegalMoves << " moves" << endl;
 		cout << "Make your " << *countingMoves << "st move: ";
 		move = _getche(); // даём возмонжость выбрать куда походить
 		if (move == 0 || move == -32) {
 			move = _getche();
 		}
 		cout << endl;
-		playerMoveOutput(field, move);
+		playerMoveOutput(field, move, numberOfLegalMoves);
 		int similarityField = 0;
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
@@ -39,16 +40,18 @@ void dataCheckClassic(int** field, char move, int* countingMoves, int*** lastFie
 					}
 				}
 			}
-			cout << "Classic mode" << endl << endl;
+			cout << "Driving mode" << endl << endl;
 			cout << "Dificulty " << menuDifficulty[*dificulty] << endl << endl;
 			++*countingMoves; // прибавляем к числу ходов 1
+			--*numberOfLegalMoves;
 			selectionRandomOutput(field, dificulty, randOnBlock); // вызываем рандом
 			break;
 		}
-		else if (*countingMoves > 1 && move == 'b' && *countingOfLegalReturnedMoves != 0) {
+		else if (*countingMoves > 1 && move == 'b' || *countingMoves > 1 && move == 'B') {
 			--*countingMoves;
 			--*countingOfLegalReturnedMoves;
 			++*countingReturnedMoves;
+			*numberOfLegalMoves = *lastNumberOfLegalMove[*countingMoves - 1];
 			for (int i = 0; i < 4; i++) {
 				for (int j = 0; j < 4; j++) {
 					field[i][j] = lastField[*countingMoves - 1][i][j];
@@ -63,7 +66,7 @@ void dataCheckClassic(int** field, char move, int* countingMoves, int*** lastFie
 			break;
 		}
 		else {
-			cout << "Error. Press A W S D" << endl;
+			cout << endl << "Error. Press A W S D" << endl << endl;
 		}
 	}
 }

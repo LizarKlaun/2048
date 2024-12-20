@@ -56,5 +56,17 @@
     <ClInclude Include="GameEndEndless.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="CheckDataDriving.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEndDriving.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="CheckDataEndless.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuDifficulty.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

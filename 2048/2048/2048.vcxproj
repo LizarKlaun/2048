@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{7453099c-2313-421d-b19e-79a84b5b09a0}</ProjectGuid>
+    <ProjectGuid>{9aa35793-29f0-49ea-a4a2-8a77d1d0cacb}</ProjectGuid>
     <RootNamespace>My2048</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -128,24 +128,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="2048.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="CheckDataAdventure.h" />
-    <ClInclude Include="CheckDataClassic.h" />
-    <ClInclude Include="CheckDataDriving.h" />
-    <ClInclude Include="CheckDataEndless.h" />
-    <ClInclude Include="ChoosingRandomNumber.h" />
-    <ClInclude Include="GameEndClassic.h" />
-    <ClInclude Include="GameEndAdventure.h" />
-    <ClInclude Include="GameEndDriving.h" />
-    <ClInclude Include="GameEndEndless.h" />
-    <ClInclude Include="MenuDifficulty.h" />
-    <ClInclude Include="MenuExit.h" />
-    <ClInclude Include="MenuMode.h" />
-    <ClInclude Include="MenuModeAdventure.h" />
-    <ClInclude Include="MenuStart.h" />
-    <ClInclude Include="Move.h" />
-    <ClInclude Include="Output.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

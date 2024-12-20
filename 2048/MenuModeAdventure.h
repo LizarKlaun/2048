@@ -1,4 +1,4 @@
-void modeAdventureMenu(char** menuModeAdventure, int* locationXmenuModeAdventure, int* adventureModeLvl, int* adventureModeMaxLvl, int topCountingMoves, int topCountingReturnedMoves, int topPointCounter, int topMaxCounter) {
+void modeAdventureMenu(char** menuModeAdventure, int* locationXmenuModeAdventure, int* adventureModeLvl, int* adventureModeMaxLvl, int topCountingMoves, int topCountingReturnedMoves, int topPointCounter, int topMaxCounter, int* mode) {
 	char move;
 	while (true) {
 		system("cls");
@@ -40,6 +40,7 @@ void modeAdventureMenu(char** menuModeAdventure, int* locationXmenuModeAdventure
 		}
 		if (move == 13 || move == 32) {
 			if (*locationXmenuModeAdventure == 0) {
+				*mode = 1;
 				if (*adventureModeMaxLvl >= 1) {
 					*adventureModeLvl = 1;
 					if (*adventureModeMaxLvl == 1) {
@@ -64,6 +65,7 @@ void modeAdventureMenu(char** menuModeAdventure, int* locationXmenuModeAdventure
 				}
 			}
 			if (*locationXmenuModeAdventure == 1) {
+				*mode = 1;
 				if (*adventureModeMaxLvl >= 2) {
 					*adventureModeLvl = 2;
 					if (*adventureModeMaxLvl == 2) {
@@ -99,6 +101,7 @@ void modeAdventureMenu(char** menuModeAdventure, int* locationXmenuModeAdventure
 				}
 			}
 			if (*locationXmenuModeAdventure == 2) {
+				*mode = 1;
 				if (*adventureModeMaxLvl >= 3) {
 					*adventureModeLvl = 3;
 					if (*adventureModeMaxLvl == 3) {
@@ -134,6 +137,7 @@ void modeAdventureMenu(char** menuModeAdventure, int* locationXmenuModeAdventure
 				}
 			}
 			if (*locationXmenuModeAdventure == 3) {
+				*mode = 1;
 				if (*adventureModeMaxLvl >= 4) {
 					*adventureModeLvl = 4;
 					if (*adventureModeMaxLvl == 4) {
@@ -169,6 +173,7 @@ void modeAdventureMenu(char** menuModeAdventure, int* locationXmenuModeAdventure
 				}
 			}
 			if (*locationXmenuModeAdventure == 4) {
+				*mode = 1;
 				if (*adventureModeMaxLvl >= 5) {
 					*adventureModeLvl = 5;
 					if (*adventureModeMaxLvl == 5) {
@@ -204,6 +209,7 @@ void modeAdventureMenu(char** menuModeAdventure, int* locationXmenuModeAdventure
 				}
 			}
 			if (*locationXmenuModeAdventure == 5) {
+				*mode = 1;
 				if (*adventureModeMaxLvl >= 6) {
 					*adventureModeLvl = 6;
 					if (*adventureModeMaxLvl == 6) {

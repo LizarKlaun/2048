@@ -36,12 +36,10 @@ void modeMenu(char** menuMode, int* mode, int* locationXmenuMode, char** menuMod
 			if (*locationXmenuMode == 0) {
 				*mode = 0;
 				system("cls");
-				return;
 			}
 			if (*locationXmenuMode == 1) {
-				*mode = 1;
 				system("cls");
-				modeAdventureMenu(menuModeAdventure, locationXmenuModeAdventure, adventureModeLvl, adventureModeMaxLvl, topPointCounter, topMaxCounter, topCountingMoves, topCountingReturnedMoves);
+				modeAdventureMenu(menuModeAdventure, locationXmenuModeAdventure, adventureModeLvl, adventureModeMaxLvl, topPointCounter, topMaxCounter, topCountingMoves, topCountingReturnedMoves, mode);
 			}
 			if (*locationXmenuMode == 2) {
 				*mode = 2;

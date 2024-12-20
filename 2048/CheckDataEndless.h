@@ -1,4 +1,4 @@
-void dataCheckClassic(int** field, char move, int* countingMoves, int*** lastField, int* countingReturnedMoves, int* endGame, int* dificulty, int* countingOfLegalReturnedMoves, char** menuDifficulty, int* randOnBlock) {
+void dataCheckEndless(int** field, char move, int* countingMoves, int*** lastField, int* countingReturnedMoves, int* endGame, int* dificulty, int* randOnBlock, char** menuDifficulty, int* countingOfLegalReturnedMoves) {
 	while (true) {
 		if (*countingOfLegalReturnedMoves != 0 && *dificulty != 0) {
 			cout << "You can go back " << *countingOfLegalReturnedMoves << " times" << endl;
@@ -39,7 +39,7 @@ void dataCheckClassic(int** field, char move, int* countingMoves, int*** lastFie
 					}
 				}
 			}
-			cout << "Classic mode" << endl << endl;
+			cout << "Endless mode" << endl << endl;
 			cout << "Dificulty " << menuDifficulty[*dificulty] << endl << endl;
 			++*countingMoves; // прибавляем к числу ходов 1
 			selectionRandomOutput(field, dificulty, randOnBlock); // вызываем рандом

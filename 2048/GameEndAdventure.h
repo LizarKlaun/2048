@@ -24,6 +24,7 @@ void gameEndAdvenchure(int** field, int* endGame, int* adventureModeLvl, int* ad
 						cout << "You complete first lvl and you unlocked second lvl in Adventure mode!!!" << endl;
 					}
 					*endGame = 1;
+					return;
 				}
 			}
 			if (*adventureModeLvl == 2) {
@@ -34,6 +35,7 @@ void gameEndAdvenchure(int** field, int* endGame, int* adventureModeLvl, int* ad
 						cout << "You complete second lvl and you unlocked third lvl in Adventure mode!!!" << endl;
 					}
 					*endGame = 1;
+					return;
 				}
 			}
 			if (*adventureModeLvl == 3) {
@@ -44,6 +46,7 @@ void gameEndAdvenchure(int** field, int* endGame, int* adventureModeLvl, int* ad
 						cout << "You complete third lvl and you unlocked fourth lvl in Adventure mode!!!" << endl;
 					}
 					*endGame = 1;
+					return;
 				}
 			}
 			if (*adventureModeLvl == 4) {
@@ -54,6 +57,7 @@ void gameEndAdvenchure(int** field, int* endGame, int* adventureModeLvl, int* ad
 						cout << "You complete fourth lvl and you unlocked sixth lvl in Adventure mode!!!" << endl;
 					}
 					*endGame = 1;
+					return;
 				}
 			}
 			if (*adventureModeLvl == 5) {
@@ -64,6 +68,7 @@ void gameEndAdvenchure(int** field, int* endGame, int* adventureModeLvl, int* ad
 						cout << "You complete sixth lvl and you unlocked seventh lvl in Adventure mode!!!" << endl;
 					}
 					*endGame = 1;
+					return;
 				}
 			}
 			if (*adventureModeLvl == 6) {
@@ -74,6 +79,7 @@ void gameEndAdvenchure(int** field, int* endGame, int* adventureModeLvl, int* ad
 						cout << "You complete seventh lvl in Adventure mode!!!" << endl;
 					}
 					*endGame = 1;
+					return;
 				}
 			}
 			if (i != 3) {

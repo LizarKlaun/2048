@@ -1,5 +1,9 @@
-void gameEndClassic(int** field, int* endGame) {
+void gameEndDriving(int** field, int* endGame, int* numberOfLegalMoves) {
 	int similarityСells = 0;
+	if (*numberOfLegalMoves <= 0) {
+		*endGame = 2;
+		return;
+	}
 	for (int i = 0; i < 4; i++) { // проверка на конец игры
 		for (int j = 0; j < 4; j++) {
 			if (field[i][j] == 2048) {
